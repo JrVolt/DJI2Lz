@@ -64,7 +64,8 @@ def print_help():
     2) Generate HUD Frame - Creates HUD overlay from SRT telemetry
     3) Extract + Generate HUD
     4) Extract EXIF - Gets photo metadata
-    5) Merge multiple SRT from long flight and genereta a continuous sequence. 
+    5) Merge multiple SRT from long flight and genereta a continuous sequence.
+    6) Extract flight log from dji_logfile.txt
     
     Usage:
     - Select desired option and provide needed file 
@@ -83,7 +84,42 @@ def run_script(script_name, input_paths):
         input_paths = [input_paths]
 
     command = ["python3", str(script_path)] + input_paths
-    print(f"\n>> Running command: {' '.join(command)}")
+    # print(f"\n>> Running command: {' '.join(command)}\n")
+
+    env = os.environ.copy()
+    env['PYTHONPATH'] = str(script_dir)
+
+    process = None
+    try:
+        process = subprocess.Popen(
+            command,
+            env=env
+        )
+        process.wait()
+        return process.returncode == 0
+    except (KeyboardInterrupt, GracefulExit):
+        if process:
+            print("\n\nOperation aborted. Cleaning up...")
+            process.terminate()
+            try:
+                process.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                process.kill()
+        raise
+    except subprocess.CalledProcessError as e:
+        print(f"\nError running script: {e}")
+        return False
+
+def run_no_args(script_name):
+    script_dir = Path(__file__).resolve().parent
+    script_path = script_dir / "Modules" / script_name
+
+    if not script_path.exists():
+        print(f"\nError: {script_path} not found.")
+        return False
+
+    command = ["python3", str(script_path)]
+    # print(f"\n>> Running command: {' '.join(command)}\n")
 
     env = os.environ.copy()
     env['PYTHONPATH'] = str(script_dir)
@@ -121,7 +157,8 @@ def main():
             print("3) Extract and generate HUD")
             print("4) Extract EXIF info [.JPG .DNG]")
             print("5) SRT Merger")
-            print("9) Print help")
+            print("6) Flight log extractor")
+            # print("9) Print help")
             print("0) Exit")
             
             try:
@@ -152,7 +189,7 @@ def main():
                     print("\nOperation cancelled.\n")
                     continue
                     
-            elif choice == "5":
+            if choice == "5":
                 try:
                     print("Enter SRT files to merge (space-separated):")
                     print("Example: file1.srt file2.srt file3.srt")
@@ -166,6 +203,15 @@ def main():
                     
                     srt_paths = [clean_path(path) for path in srt_paths]
                     run_script("DJI2Lz-SrtMerger.py", srt_paths)
+                except (KeyboardInterrupt, GracefulExit):
+                    print("\nOperation cancelled.\n")
+                    continue
+
+            elif choice == "6":
+                try:
+                    # print("Extract CSV from flight log for HUD Generation:")
+                    # print("Enter DJIFlightLog.txt:\n")
+                    run_no_args("DJI2Lz_LogWrapper.py")
                 except (KeyboardInterrupt, GracefulExit):
                     print("\nOperation cancelled.\n")
                     continue

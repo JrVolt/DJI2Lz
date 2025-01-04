@@ -45,7 +45,11 @@ COLORS = {
     "WAYPOINT_LINE": "aquamarine",
     "WAYPOINT": "dodgerblue",
     "WAYPOINT_STROKE": "fuchsia",
-    "ALTITUDE_TEXT": "red"
+    "ALTITUDE_TEXT": "red",
+    'PATH': 'aquamarine',  # Color for flight path
+    'WAYPOINT_BACKGROUND': (250, 250, 250),
+    'WAYPOINT_OPACITY': 50,
+    'WAYPOINT_FRAME_STROKE': 4
 }
 
 
@@ -92,3 +96,28 @@ WAYPOINT_FRAME_STROKE = 4
 WAYPOINT_BACKGROUND = (250, 250, 250)
 WAYPOINT_OPACITY = 50
 WAYPOINT_CONNECTION = 8
+
+
+
+
+
+
+# Battery Indicator Configuration
+BATTERY_THRESHOLDS = {
+    'CELL_VOLTAGE': {
+        'danger': 3.5,    # Red
+        'warning': 3.7,   # Yellow
+        'normal': 4.2     # Green
+    },
+    'TEMPERATURE': {
+        'high': 40,       # Red
+        'normal': 25      # Green
+    }
+}
+
+# Signal Indicator Configuration
+SIGNAL_THRESHOLDS = {
+    'strong': 80,     # Green
+    'medium': 50,     # Yellow
+    'weak': 30        # Red
+}
