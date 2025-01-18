@@ -1,0 +1,11 @@
+# Image processing
+Pillow>=9.0.0
+numpy>=1.21.0
+matplotlib>=3.4.0
+opencv-python>=4.5.0
+
+# Character encoding detection
+chardet>=4.0.0
+
+# Optional system info (used in multiprocessing)
+psutil>=5.8.0
