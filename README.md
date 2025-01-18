@@ -12,6 +12,13 @@
 - **Vertical Speedometer** with text in m/s and km/h
 - **Satellite Counter** with colored text based on satellite status
 
+
+![Sample HUD Output](/DJISAMPLE/01.jpg)
+
+![Sample HUD Output](/DJISAMPLE/02.jpg)
+
+
+
 ## Installation
 
 ```bash
