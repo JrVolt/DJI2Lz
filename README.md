@@ -1,61 +1,94 @@
+# DJI2Lz - A Lightweight HUD Generator for Drone Data
+
 ## Features
 
-- GPS Coordinate
-- Altitude bar
-- Altitude counter
-- Photo EXIF 
-- Custom text for filter lens
-- Distance from Operator
-- Horizontal speedometer with text in m/s and km/s
-- Vertical speedometer with text in m/s and km/s
-- Satellite counter with colored text based on satellite.
+- **GPS Coordinates**
+- **Altitude Bar**
+- **Altitude Counter**
+- **Photo EXIF Integration**
+- **Custom Text for Filter Lens**
+- **Distance from Operator**
+- **Horizontal Speedometer** with text in m/s and km/h
+- **Vertical Speedometer** with text in m/s and km/h
+- **Satellite Counter** with colored text based on satellite status
 
 ## Installation
 
+```bash
 git clone https://github.com/JrVolt/DJI2Lz.git
-cd DJI2Lz 
+
+cd DJI2Lz
 
 pip install -r requirements.txt
 
-YOU MUST CONFIGURE A VALID FONT IN LayoutConfig.py
-(unless )
+# Configure a valid font in `LayoutConfig.py` before running
 python3 DJI2Lz.py
+```
 
-# Install dependencies
+### External Dependencies
 
+This project uses an executable from another open-source project by [USERTOADDLATER]. The binary is provided along with the files for user convenience. However, you must obtain and add a valid DJI API key to decode the flight log.
 
+## Platform Compatibility
 
-## Basic configuration
+- **Linux/Unix:** Fully supported.
+- **Mac:** Should work at 99% with minor fixes.
+- **Windows WSL:** May work, but troubleshooting will likely be required.
+- **Windows (Native):** Not supported. Feel free to fork and add support for Windows.
 
-All visual elements can be configured through constants in `LayoutConfig.py` like resolution, text color, font details.
-Each instruments can be individually enable easily.
+## Basic Configuration
 
-Is possible to easly configure altitude min and max limit. 
-Is also possible to chang the speed limit.
-    KEEP IN MIND THAT CHANGING THIS WILL PROBLY BROKE THE SPEEDOMETER DRAW.
+All visual elements can be customized through constants in `LayoutConfig.py`. These include:
+- **Resolution**
+- **Text Color**
+- **Font Details**
 
-All the text positioning is configured in the DJI2Lz-HUD_Generator.py module, PAY ATTENTION
+### Instrument Management
+Each instrument can be individually enabled or disabled with ease.
 
+### Altitude and Speed Limits
+- **Altitude Limits:** Easily configure minimum and maximum altitude values.
+- **Speed Limits:** Customizable, but altering these values might break the speedometer drawing. Proceed with caution.
+
+### Text Positioning
+All text positioning is configured in the `DJI2Lz-HUD_Generator.py` module. Pay close attention when making changes.
 
 ## Dependencies
 
-- PIL (Pillow)
-- matplotlib
-- numpy
+- **Pillow (PIL)**
+- **matplotlib**
+- **numpy**
+
+## Future Development
+
+I plan to continue working on this code and may eventually include:
+- **Additional Data from Flight Logs:** Integration of more detailed information from datalog files.
+- **Waypoint Map Drawing:** Generate a map from GPS waypoint data (already coded but currently very rough).
+
+These features are not a priority, as the main goal of the project has already been achieved.
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork the repository.
+2. Create your feature branch:
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+5. Open a Pull Request.
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- Inspired by standard aviation attitude indicators
-- Developed for drone interface applications
+- Inspired by standard aviation attitude indicators.
+- Developed for drone interface applications.
