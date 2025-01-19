@@ -29,21 +29,24 @@ cd DJI2Lz
 pip install -r requirements.txt
 
 # Configure a valid font in `LayoutConfig.py` before running
-python3 DJI2Lz.py
+
+python3 DJI2Lz_Launcher.py
 ```
 
 ### External Dependencies
 
-This project uses an executable from another open-source project by [USERTOADDLATER]. The binary is provided along with the files for user convenience. However, you must obtain and add a valid DJI API key to decode the flight log.
+This project uses an executable from another open-source project named `dji-log-parser` by `lvauvillier` . The binary is provided along with the files for user convenience. However, you must obtain and add a valid DJI API key to decode the flight log.
 
-## Platform Compatibility
+# Platform Compatibility
 
 - **Linux/Unix:** Fully supported.
 - **Mac:** Should work at 99% with minor fixes.
 - **Windows WSL:** May work, but troubleshooting will likely be required.
 - **Windows (Native):** Not supported. Feel free to fork and add support for Windows.
 
-## Basic Configuration
+## Configuration
+
+### Basic
 
 All visual elements can be customized through constants in `LayoutConfig.py`. These include:
 - **Resolution**
@@ -60,7 +63,7 @@ Each instrument can be individually enabled or disabled with ease.
 ### Text Positioning
 All text positioning is configured in the `DJI2Lz-HUD_Generator.py` module. Pay close attention when making changes.
 
-## Dependencies
+### Dependencies
 
 - **Pillow (PIL)**
 - **matplotlib**
@@ -74,7 +77,7 @@ I plan to continue working on this code and may eventually include:
 
 These features are not a priority, as the main goal of the project has already been achieved.
 
-## Contributing
+### Contributing
 
 1. Fork the repository.
 2. Create your feature branch:
