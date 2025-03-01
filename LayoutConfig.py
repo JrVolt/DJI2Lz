@@ -8,14 +8,18 @@ ENABLE_GPS = True
 ENABLE_SATELLITE = True
 ENABLE_RCDIST = True
 ENABLE_PHOTO = True
-ENABLE_WAYPOINT = False
+ENABLE_WAYPOINT = True
+ENABLE_STATS_DISTANCE = True 
+ENABLE_STATS_AREA = False 
+ENABLE_STATS_UNIT = False 
+
 
 #[Global]
 RESOLUTION = (3840, 2160)
-LENS = " Filter: CPL"
+LENS = ' Filter: CPL'
 SUPPORTED_EXTENSIONS = ['.srt', '.csv']
 FRAME_QUALITY = 100 
-FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" # >>>>> MUST BE CHANGE TO MATCH YOUR OS <<<<<
+FONT_PATH = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf' # >>>>> MUST (!!!!!) BE CHANGE TO MATCH YOUR OS <<<<<
 FONT_SIZE = 60
 SMALL_FONT_SIZE = 50
 SMALLEST_FONT_SIZE = 40
@@ -24,6 +28,7 @@ DRAW_TEXT_STROKE_WIDTH = 3
 MARGIN = 100
 LIGHT_STROKE_WIDTH = 2
 STROKE_WIDTH = 4
+
 COLORS = {
     'TEXT_PRIMARY': 'white',
     'TEXT_SECONDARY': 'blu',
@@ -41,16 +46,18 @@ COLORS = {
     'ALTITUDE_BAR_FILL': 'coral',
     'ALTITUDE_BAR_ZERO': 'red',
     'ALTITUDE_BAR_CURRENT': 'firebrick',
-    "WAYPOINT_LINE": "aquamarine",
-    "WAYPOINT": "dodgerblue",
-    "WAYPOINT_STROKE": "fuchsia",
-    "ALTITUDE_TEXT": "red",
-    'PATH': 'aquamarine',  # Color for flight path
+    'ALTITUDE_TEXT': 'red',
+    'STATS_AREA': '#8B4513',
+    'STATS_DISTANCE': 'limegreen',
+    'STATS_UNIT': '#CD853F',
+    'WAYPOINT_POSITION': 'white',
+    'WAYPOINT_LINE': 'darkred',
+    'WAYPOINT': 'dodgerblue',
+    'WAYPOINT_STROKE': 'red',
     'WAYPOINT_BACKGROUND': (250, 250, 250),
-    'WAYPOINT_OPACITY': 50,
-    'WAYPOINT_FRAME_STROKE': 4
+    'WAYPOINT_OPACITY': 75,
+    'WAYPOINT_GRID':'dimgray',
 }
-
 
 # Speedometer - Design 
 SPEEDOMETER_RADIUS = 165 
@@ -85,15 +92,10 @@ ALTITUDE_BAR_HEIGHT = 1250
 ALTITUDE_TEXT_OFFSET = 175 
 
 # Waypoint Track
-WAYPOINT_RADIUS = 5
-WAYPOINT_MIN_DIST=0.0001
-
-WAYPOINT_OFFSET_TEXT = 40
-WAYPOINT_TEXT = 45
 WAYPOINT_FRAME_STROKE = 4
 WAYPOINT_BACKGROUND = (250, 250, 250)
 WAYPOINT_OPACITY = 50
-WAYPOINT_CONNECTION = 8
+#DELETE ? #WAYPOINT_CONNECTION = 8
 
 # WIP below
 

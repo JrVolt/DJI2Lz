@@ -4,34 +4,26 @@ import sys
 import argparse
 
 def merge_srt_files(srt_files):
-    """
-    Merges multiple .srt files, sorts them by name, and reindexes the chunks.
-
-    Args:
-        srt_files: A list of paths to the .srt files to be merged.
-
-    """
-    merged_srt = ""
-    chunk_count = 1
+    merged_srt = []
+    index = 1
 
     for srt_file in sorted(srt_files):
+        print(f"Processing: {srt_file}")
         with open(srt_file, 'r') as f:
-            srt_content = f.read()
-
-        chunks = re.split(r'\n\n', srt_content.strip())
-
+            content = f.read().strip()
+        
+        chunks = [chunk.strip() for chunk in content.split('\n\n') if chunk.strip()]
+        
         for chunk in chunks:
             lines = chunk.splitlines()
-            if re.match(r'^\d+$', lines[0]):
-                lines.pop(0)
-            lines.insert(0, str(chunk_count))
-            merged_srt += '\n'.join(lines) + '\n\n'
-            chunk_count += 1
+            if len(lines) >= 3:
+                merged_srt.append(f"{index}\n{lines[1]}\n{lines[2]}\n")
+                index += 1
 
-    return merged_srt
+    return '\n'.join(merged_srt)
 
 def main():
-    parser = argparse.ArgumentParser(description="SRT File Merger with Reindexing")
+    parser = argparse.ArgumentParser(description="SRT File Merger with Sequential Indexing")
     parser.add_argument('input', nargs='*', help='Input SRT file(s) or directory containing SRT files')
     parser.add_argument('-o', '--output', help='Output file path', required=False)
     args = parser.parse_args()
@@ -44,9 +36,9 @@ def main():
     srt_files = []
     for path in args.input:
         if os.path.isdir(path):
-            found_files = [os.path.join(path, f) for f in os.listdir(path) if f.endswith('.srt')]
+            found_files = sorted([os.path.join(path, f) for f in os.listdir(path) if f.endswith('.srt')])
             if not found_files:
-                print(f"No srt files found: {path}")
+                print(f"No SRT files found in: {path}")
             srt_files.extend(found_files)
         elif os.path.isfile(path) and path.endswith('.srt'):
             srt_files.append(path)
@@ -54,21 +46,25 @@ def main():
             print(f"Invalid SRT file or directory: {path}")
 
     if not srt_files:
-        sys.exit("No valid SRT files found ")
+        sys.exit("No valid SRT files found")
 
-    merged_srt_content = merge_srt_files(srt_files)
+    print("\nMerging files in this order:")
+    for f in srt_files:
+        print(f"- {os.path.basename(f)}")
+
+    merged_content = merge_srt_files(srt_files)
 
     if args.output:
         output_path = args.output
     else:
         directory = os.path.dirname(srt_files[0])
-        output_filename = "-".join(os.path.basename((f).replace("DJI_","")).split(".")[0] for f in srt_files)
-        output_path = os.path.join(directory, "DJI_" + output_filename + ".srt")
+        output_filename = "-".join(os.path.basename(f).replace("DJI_","").split(".")[0] for f in srt_files)
+        output_path = os.path.join(directory, f"DJI_MERGED_{output_filename}.srt")
 
     with open(output_path, 'w') as f:
-        f.write(merged_srt_content)
+        f.write(merged_content)
 
-    print(f"Merged SRT files saved as {output_path}")
+    print(f"\nMerged SRT saved as: {output_path}")
 
 if __name__ == "__main__":
     main()
