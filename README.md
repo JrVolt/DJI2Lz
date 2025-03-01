@@ -1,4 +1,4 @@
-# DJI2Lz - A Lightweight HUD Generator for Drone Data
+# DJI2Lz - A Lightweight HUD Generator for DJI Drone 
 
 ## Features
 
@@ -97,8 +97,3 @@ These features are not a priority, as the main goal of the project has already b
 ## License
 
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Inspired by standard aviation attitude indicators.
-- Developed for drone interface applications.
