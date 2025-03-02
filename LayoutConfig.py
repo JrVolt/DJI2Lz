@@ -47,15 +47,15 @@ COLORS = {
     'ALTITUDE_BAR_ZERO': 'red',
     'ALTITUDE_BAR_CURRENT': 'firebrick',
     'ALTITUDE_TEXT': 'red',
-    'STATS_AREA': '#8B4513',
+    'STATS_AREA': '#8B4513',    # Disabled
     'STATS_DISTANCE': 'limegreen',
-    'STATS_UNIT': '#CD853F',
-    'WAYPOINT_POSITION': 'white',
+    'STATS_UNIT': '#CD853F',    # Disabled
+    'WAYPOINT_POSITION': 'gold',
     'WAYPOINT_LINE': 'darkred',
     'WAYPOINT': 'dodgerblue',
     'WAYPOINT_STROKE': 'red',
     'WAYPOINT_BACKGROUND': (250, 250, 250),
-    'WAYPOINT_OPACITY': 75,
+    'WAYPOINT_OPACITY': 85,
     'WAYPOINT_GRID':'dimgray',
 }
 

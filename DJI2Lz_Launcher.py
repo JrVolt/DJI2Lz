@@ -66,6 +66,7 @@ def print_help():
     4) Extract EXIF - Gets photo metadata
     5) Merge multiple SRT from long flight and genereta a continuous sequence.
     6) Extract flight log from dji_logfile.txt
+    7) Convert DJI .srt in 2Lz.csv 
     
     Usage:
     - Select desired option and provide needed file 
@@ -158,7 +159,7 @@ def main():
             print("4) Extract EXIF info [.JPG .DNG]")
             print("5) SRT Merger")
             print("6) Flight log extractor")
-            # print("9) Print help")
+            print("7) Convert DJI .srt in 2Lz.csv")
             print("0) Exit")
             
             try:
@@ -207,11 +208,16 @@ def main():
                     print("\nOperation cancelled.\n")
                     continue
 
-            elif choice == "6":
+            if choice == "6":
                 try:
-                    # print("Extract CSV from flight log for HUD Generation:")
-                    # print("Enter DJIFlightLog.txt:\n")
                     run_no_args("DJI2Lz_LogWrapper.py")
+                except (KeyboardInterrupt, GracefulExit):
+                    print("\nOperation cancelled.\n")
+                    continue
+
+            elif choice == "7":
+                try:
+                    run_no_args("DJI2Lz_SrtConverter.py")
                 except (KeyboardInterrupt, GracefulExit):
                     print("\nOperation cancelled.\n")
                     continue

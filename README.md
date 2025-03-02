@@ -8,14 +8,18 @@
 - **Photo EXIF Integration**
 - **Custom Text for Filter Lens**
 - **Distance from Operator**
+- **Total distance**
 - **Horizontal Speedometer** with text in m/s and km/h
 - **Vertical Speedometer** with text in m/s and km/h
 - **Satellite Counter** with colored text based on satellite status
+- **Flight path mpas** 
 
 
 ![Sample HUD Output](/DJISAMPLE/01.jpg)
 
 ![Sample HUD Output](/DJISAMPLE/02.jpg)
+
+![Sample HUD Output](/DJISAMPLE/03.jpg)
 
 
 
@@ -32,6 +36,14 @@ pip install -r requirements.txt
 
 python3 DJI2Lz_Launcher.py
 ```
+## Usage
+
+For long shoot/flight, divided in `multiple DJI.mp4` please follow this process, for correct GPS drawing.
+
+1. Extract all the .srt from the videos `DJI_0001.mp4 DJI_0002.mp4 DJI_0003.mp4`
+2. Merge the extracted file, `Launcher option 5`
+3. Generate the HUD forom `DJI_MERGED_0001-0002-0003.srt` 
+
 
 ### External Dependencies
 
@@ -80,18 +92,9 @@ These features are not a priority, as the main goal of the project has already b
 ### Contributing
 
 1. Fork the repository.
-2. Create your feature branch:
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m 'Add some amazing feature'
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature/amazing-feature
-   ```
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
 5. Open a Pull Request.
 
 ## License
