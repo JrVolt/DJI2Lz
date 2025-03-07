@@ -7,7 +7,6 @@ import os
 
 def extract_metadata(filename, metadata_fields):
     try:
-        # Fix the exiftool command syntax
         result = subprocess.run(['exiftool', '-j', filename], capture_output=True, text=True, check=True)
         exif_data = json.loads(result.stdout)[0]
         
@@ -103,14 +102,12 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
-    # Handle no arguments case
     if not args.input:
         args.input = (input("Enter path to input file: ")).strip("'")
 
     try:
         validate_file(args.input)
         
-        # Determine output filename
         if args.output:
             output_filename = args.output
         else:
@@ -118,11 +115,9 @@ if __name__ == '__main__':
             base_name = os.path.splitext(os.path.basename(args.input))[0]
             output_filename = os.path.join(out_path, f"{base_name}_metadata.txt")
 
-        # Extract metadata
         extracted_data = extract_metadata(args.input, args.fields)
         save_metadata_to_file(extracted_data, output_filename)
 
-        # Remove metadata if requested
         if args.remove_sn:
             remove_metadata(args.input, metadata_to_remove)
             

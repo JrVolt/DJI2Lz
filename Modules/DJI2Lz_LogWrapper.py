@@ -1,10 +1,11 @@
-# THIS MODULE RELAY ON www.github.com/lvauvillier/dji-log-parser all credit for the core bin to him
+# THIS MODULE RELAY ON www.github.com/lvauvillier/dji-log-parser all credit for the core bin to Him
 import os
 import subprocess
 import argparse
 import pandas as pd
 from pathlib import Path
 import sys
+import re
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import DJI_API_KEY     # External config (DJI_API_KEY.Py)
@@ -78,10 +79,26 @@ class DJILogWrapper:
         except Exception as e:
             raise Exception(f"Failed to simplify CSV: {str(e)}")
 
+    def _transform_filename(self, filename):
+        pattern = r'DJIFlightRecord_(\d{4})-(\d{2})-(\d{2})_\[(\d{2})-(\d{2})-(\d{2})\]'
+        match = re.match(pattern, filename)
+        
+        if not match:
+            return filename
+            
+        year, month, day, hour, minute, second = match.groups()
+        new_name = f"AircraftTelemetry_{year}{month}{day}.{hour}{minute}{second}"
+        return new_name
+
     def generate_output_filename(self, input_path, output_type='csv', simplified=False):
-        """Generate appropriate output filename"""
         base_path = os.path.splitext(input_path)[0]
+        base_name = os.path.basename(base_path)
+        transformed_name = self._transform_filename(base_name)
         suffix = "_Simplified" if simplified else "_Standard"
+        
+        if transformed_name != base_name:
+            return str(Path(os.path.dirname(base_path)) / f"{transformed_name}{suffix}.{output_type}")
+        
         return f"{base_path}{suffix}.{output_type}"
 
     def process_log(self, input_file, **kwargs):
@@ -95,18 +112,14 @@ class DJILogWrapper:
         base_dir = input_path.parent
         
         try:
-            # Get output type and simplification flag
             output_type = next((k for k in kwargs.keys() if k != 'simplify'), 'csv')
             is_simplified = kwargs.get('simplify', False)
-            
-            # Generate output filename
             output_path = self.generate_output_filename(input_file, output_type, is_simplified)
             kwargs[output_type] = output_path
             
             print(f"\nProcessing: {os.path.basename(input_file)}")
             print(f"Output: {output_path}")
             
-            # Run parser
             cmd = [str(self.binary_name)]
             if self.api_key:
                 cmd.extend(['--api-key', self.api_key])

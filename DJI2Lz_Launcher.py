@@ -85,7 +85,6 @@ def run_script(script_name, input_paths):
         input_paths = [input_paths]
 
     command = ["python3", str(script_path)] + input_paths
-    # print(f"\n>> Running command: {' '.join(command)}\n")
 
     env = os.environ.copy()
     env['PYTHONPATH'] = str(script_dir)
@@ -120,7 +119,6 @@ def run_no_args(script_name):
         return False
 
     command = ["python3", str(script_path)]
-    # print(f"\n>> Running command: {' '.join(command)}\n")
 
     env = os.environ.copy()
     env['PYTHONPATH'] = str(script_dir)

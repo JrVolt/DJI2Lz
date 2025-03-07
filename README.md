@@ -17,8 +17,6 @@
 
 ![Sample HUD Output](/DJISAMPLE/01.jpg)
 
-![Sample HUD Output](/DJISAMPLE/02.jpg)
-
 ![Sample HUD Output](/DJISAMPLE/03.jpg)
 
 
@@ -81,13 +79,12 @@ All text positioning is configured in the `DJI2Lz-HUD_Generator.py` module. Pay 
 - **matplotlib**
 - **numpy**
 
-## Future Development
+## Note 
+Each modules can be executed standalone, execpt for the flightrecord decode that require `dji-log`, PLEASE DO NOT, they are safer to use with the launcher.
 
-I plan to continue working on this code and may eventually include:
-- **Additional Data from Flight Logs:** Integration of more detailed information from datalog files.
-- **Waypoint Map Drawing:** Generate a map from GPS waypoint data (already coded but currently very rough).
+All the goal of the project has already been achieved, it can be considered complete
 
-These features are not a priority, as the main goal of the project has already been achieved.
+Eventually all minor update 
 
 ### Contributing
 

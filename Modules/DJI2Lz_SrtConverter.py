@@ -4,17 +4,7 @@ import os
 import sys
 import re
 
-# def set_logging_level(debug):
-#     if debug:
-#         logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-#     else:
-#         logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-
 def convert_srt_to_csv(in_file, out_file, debug=False):
-    """Converts a DJI SRT file to CSV format with GPS data"""
-    # set_logging_level(debug)
-    # logging.debug('Debug logging is on.')
-    
     pattern = (
         r"F/(?P<aperture>\d+\.\d+), SS (?P<shutter_speed>\d+\.\d+), ISO (?P<iso>\d+), "
         r"EV (?P<ev>[+-]?\d+(\.\d+)?), DZOOM (?P<dzoom>\d+\.\d+), GPS \((?P<longitude>[^,]+), "
@@ -24,8 +14,8 @@ def convert_srt_to_csv(in_file, out_file, debug=False):
     )
     
     with open(out_file, 'w') as csv_file:
-        # header = "Date,Time,Aperture,ShutterSpeed,ISO,EV,Zoom,Longitude,Latitude,Altitude,Distance,Height,HorizontalSpeed,VerticalSpeed\n"
-        header = "2Lz.Date,2Lz.Time,2Lz.Aperture,2Lz.ShutterSpeed,2Lz.ISO,2Lz.EV,2Lz.Zoom,2Lz.Longitude,2Lz.Latitude,2Lz.RcDist,2Lz.Distance,2Lz.Height,2Lz.HorizontalSpeed,2Lz.VerticalSpeed\n"
+        # header = "Time,Aperture,ShutterSpeed,ISO,EV,Zoom,Longitude,Latitude,Altitude,Distance,Height,HorizontalSpeed,VerticalSpeed\n"
+        header = "2Lz.Time,2Lz.Aperture,2Lz.ShutterSpeed,2Lz.ISO,2Lz.EV,2Lz.Zoom,2Lz.Longitude,2Lz.Latitude,2Lz.RcDist,2Lz.Distance,2Lz.Height,2Lz.HorizontalSpeed,2Lz.VerticalSpeed\n"
         csv_file.write(header)
         
         with open(in_file) as f:
@@ -42,7 +32,6 @@ def convert_srt_to_csv(in_file, out_file, debug=False):
             timestamp_parts = timestamp_line.split(' --> ')[0].strip().split(',')[0].split(':')
             time = ':'.join(timestamp_parts)
             
-            # Get date if HOME is available
             date = ""
             for line in lines[2:]:
                 if line.startswith('HOME'):
