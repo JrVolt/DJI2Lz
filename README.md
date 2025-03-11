@@ -45,9 +45,9 @@ For long shoot/flight, divided in `multiple DJI.mp4` please follow this process,
 ## Editing 
 
 The script will export a lots of trasparent .png in UHD resolution (3840x2160)
-In you preferred video editor make sure to strech each to cover 1 ses of video, based on your timeline's frame rate.
+In you preferred video editor make sure to strech each to cover 1 sec of video, based on your timeline's frame rate.
 
-(IE: Video@25p each .png shuld last 25 frames.)
+(IE: Video@25p each .png sohuld last 25 frames.)
 
 
 ### External Dependencies
