@@ -69,7 +69,7 @@ API Setup:
 
 ### Drone Compatibility
 
-It WAS ~~ suppsed to be compatible to every DJI drone that support the telemetry in subtile track.~~
+It WAS ~~suppsed to be compatible to every DJI drone that support the telemetry in subtile track.~~
 
 I can confirm that :
 - WORKING with latest firmware of `DJI Mini, DJI Mini 2` (up tp 04/25)
