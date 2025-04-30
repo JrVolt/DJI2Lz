@@ -71,15 +71,23 @@ API Setup:
 
 It suppsed to be compatible to every DJI drone that support the telemetry in subtile track with correct telemtry syntax.
 
-**Correct**
+**Supported**
 `F, SS, ISO, EV, DZOOM, GPS (N, E, H), D m, H m, H.S m/s, V.S m/s `
+
+**Unsupported**
+`[iso : ] [shutter : ] [fnum : ] [ev : ] [ct : ] [color_md : d] [focal_len : ] [latitude: ] [longitude: ] [rel_alt:  abs_alt: ]`
+
+(Mainly for the lack of speed data)
+
 
 I can confirm that :
 - WORKING with latest firmware of `DJI Mini, DJI Mini 2` (up tp 04/25)
 - NOT WORKING with `Mavic Air 2 (FW 01.01.0610)` 
 
+For complete support table refer to DroneSupport.md
+
 Telemetry data heavily different, barely usable to generate graphics.
-Some older drone or firmware (maybe both) have a separate .srt along the .mp4 file.
+Some ~~older~~ drone or firmware (maybe both) have a separate .srt along the .mp4 file.
 
 ## Configuration
 
