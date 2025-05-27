@@ -98,6 +98,9 @@ HOWEVER
 It's now availlable a conversion tool that (force) convert the unsupported telemetry spoofing the missing value. 
 Spoofed value are set to 0, edit the module if you want. 
 
+NOTE : In this case you will find A LOTS MORE .png, this time ONE.png=1ftg
+No need to strech each png to 1 sec. 
+
 It's suggested to turn off : 
 - Speedometer
 - GPS Count 
