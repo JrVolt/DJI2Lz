@@ -1,6 +1,7 @@
 # Image processing
 Pillow>=9.0.0
-numpy>=1.21.0
+#numpy>=1.21.0
+numpy>=1.21.0,<2.0
 matplotlib>=3.4.0
 opencv-python>=4.5.0
 
