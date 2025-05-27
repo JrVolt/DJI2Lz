@@ -158,6 +158,7 @@ def main():
             print("5) SRT Merger")
             print("6) Flight log extractor")
             print("7) Convert DJI .srt in 2Lz.csv")
+            print("8) Force unsupported telemtry")
             print("0) Exit")
             
             try:
@@ -213,9 +214,16 @@ def main():
                     print("\nOperation cancelled.\n")
                     continue
 
-            elif choice == "7":
+            if choice == "7":
                 try:
                     run_no_args("DJI2Lz_SrtConverter.py")
+                except (KeyboardInterrupt, GracefulExit):
+                    print("\nOperation cancelled.\n")
+                    continue
+
+            elif choice == "8":
+                try:
+                    run_no_args("DJI2Lz_SyntaxConverter.py")
                 except (KeyboardInterrupt, GracefulExit):
                     print("\nOperation cancelled.\n")
                     continue

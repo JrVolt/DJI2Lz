@@ -82,12 +82,27 @@ It suppsed to be compatible to every DJI drone that support the telemetry in sub
 
 I can confirm that :
 - WORKING with latest firmware of `DJI Mini, DJI Mini 2` (up tp 04/25)
-- NOT WORKING with `Mavic Air 2 (FW 01.01.0610)` 
+- NOT WORKING with `Mavic Air 2 (FW 01.01.0610)` (can be forced)
 
 For complete support table refer to DroneSupport.md
 
 Telemetry data heavily different, barely usable to generate graphics.
 Some ~~older~~ drone or firmware (maybe both) have a separate .srt along the .mp4 file.
+
+**Force unsupported**
+
+Ok, First of all the overall compatibility won't change
+
+HOWEVER
+
+It's now availlable a conversion tool that (force) convert the unsupported telemetry spoofing the missing value. 
+Spoofed value are set to 0, edit the module if you want. 
+
+It's suggested to turn off : 
+- Speedometer
+- GPS Count 
+- RC Distance
+
 
 ## Configuration
 
@@ -121,6 +136,7 @@ Each modules can be executed standalone, execpt for the flightrecord decode that
 All the goal of the project has already been achieved, it can be considered complete.
 
 Eventually all minor update.
+    (I Lied... 05/25)
 
 ### Contributing
 

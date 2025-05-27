@@ -1,4 +1,4 @@
-#Ver 4.6 / Nothing wrong ?! /  Ugly color choise :')
+#Ver 4.5.2 / Waypoint meh / "n/a" fix / short clip hovering error for waypoint 
 import argparse
 import math
 import os
@@ -148,7 +148,9 @@ def parse_telemetry_line(telemetry_line):
     
     pattern = (
         r"F/(?P<aperture>\d+\.\d+), SS (?P<shutter_speed>\d+\.\d+), ISO (?P<iso>\d+), "
-        r"EV (?P<ev>[+-]?\d+(\.\d+)?), DZOOM (?P<dzoom>\d+\.\d+), GPS \((?P<longitude>[^,]+), "
+        r"EV (?P<ev>[+-]?\d+(\.\d+)?)"
+        r"(?:, DZOOM (?P<dzoom>\d+\.\d+))?"  # Make DZOOM optional
+        r", GPS \((?P<longitude>[^,]+), "
         r"(?P<latitude>[^,]+), (?P<altitude>[^)]+)\), D (?P<distance>[^,m]+)(?:m)?, "
         r"H (?P<height>-?\d+\.\d+)m?, H\.S (?P<horizontal_speed>-?\d+\.\d+)m/s, "
         r"V\.S (?P<vertical_speed>-?\d+\.\d+)m/s"
@@ -165,7 +167,7 @@ def parse_telemetry_line(telemetry_line):
             "shutter": float(match.group("shutter_speed")),
             "iso": int(match.group("iso")),
             "ev": float(match.group("ev")),
-            "dzoom": float(match.group("dzoom")),
+            "dzoom": float(match.group("dzoom")) if match.group("dzoom") is not None else 1.0,  # Default to 1.0 if not present
             "lat": float(match.group("latitude")),
             "lon": float(match.group("longitude")),
             "alt": float(match.group("altitude")),
@@ -214,7 +216,9 @@ def draw_altitude_bar(draw, height, pos):
 
     # Current Altitude indicator
     draw.line([x, fill_y, x + bar_width, fill_y], LayoutConfig.COLORS['ALTITUDE_BAR_CURRENT'], width=5)
+    #DIOMERDA
     draw_text_with_stroke(draw, ( x - 100, text_y + 1450 ), f"{height:.1f}m", FONT, text_color=LayoutConfig.COLORS['TEXT_HIGHLIGHT'])
+    # draw_text_with_stroke(draw, (x - LayoutConfig.ALTITUDE_TEXT_OFFSET + 75 , text_y), f"{height:.1f}m", FONT, text_color=LayoutConfig.COLORS['TEXT_HIGHLIGHT'])
 
 def draw_text_with_stroke(draw, pos, text, font, text_color=LayoutConfig.COLORS['TEXT_PRIMARY'], stroke_color=LayoutConfig.COLORS['STROKE'], stroke_width=LayoutConfig.DRAW_TEXT_STROKE_WIDTH):
     x, y = pos
@@ -231,30 +235,18 @@ def draw_current_position(draw, x, y, alt):
     draw.line([x, y - marker_size, x, y + marker_size], fill=LayoutConfig.COLORS["WAYPOINT_POSITION"], width=2)
 
 def draw_flight_statistics(draw, current_index, grid_scale, enable_config):
-    try:
-        if enable_config['area'] or enable_config['distance']:
-            width, height = path_tracker.get_current_dimensions(current_index)
-            distance = path_tracker.get_current_distance(current_index)
-        
-        if enable_config['area']:
-            draw_text_with_stroke(draw, enable_config['area_pos'], 
-                f"Area: {width:.1f}m × {height:.1f}m", SMALL_FONT, 
-                text_color=LayoutConfig.COLORS["STATS_AREA"], 
-                stroke_width=LayoutConfig.LIGHT_STROKE_WIDTH)
-        
-        if enable_config['distance']:
-            draw_text_with_stroke(draw, enable_config['distance_pos'],
-                f"Dist: {distance:.1f}m", SMALL_FONT, 
-                text_color=LayoutConfig.COLORS["STATS_DISTANCE"], 
-                stroke_width=LayoutConfig.LIGHT_STROKE_WIDTH)
-        
-        if enable_config['unit']:
-            draw_text_with_stroke(draw, enable_config['unit_pos'], 
-                f"Unit: {grid_scale}m", SMALL_FONT, 
-                text_color=LayoutConfig.COLORS["STATS_UNIT"], 
-                stroke_width=LayoutConfig.LIGHT_STROKE_WIDTH)
-    except Exception as e:
-        print(f"Warning: Could not draw flight statistics: {str(e)}")
+    if enable_config['area'] or enable_config['distance']:
+        width, height = path_tracker.get_current_dimensions(current_index)
+        distance = path_tracker.get_current_distance(current_index)
+    
+    if enable_config['area']:
+        draw_text_with_stroke(draw, enable_config['area_pos'], f"Area: {width:.1f}m × {height:.1f}m", SMALL_FONT, text_color=LayoutConfig.COLORS["STATS_AREA"], stroke_width=LayoutConfig.LIGHT_STROKE_WIDTH)
+    
+    if enable_config['distance']:
+        draw_text_with_stroke(draw, enable_config['distance_pos'],f"Dist: {distance:.1f}m", SMALL_FONT, text_color=LayoutConfig.COLORS["STATS_DISTANCE"], stroke_width=LayoutConfig.LIGHT_STROKE_WIDTH)
+    
+    if enable_config['unit']:
+        draw_text_with_stroke(draw, enable_config['unit_pos'], f"Unit: {grid_scale}m", SMALL_FONT, text_color=LayoutConfig.COLORS["STATS_UNIT"], stroke_width=LayoutConfig.LIGHT_STROKE_WIDTH)
 
 def draw_waypoints(draw, center, scaled_points, current_index):
     square_size = 500
@@ -298,21 +290,27 @@ def draw_waypoints(draw, center, scaled_points, current_index):
             box_height = max_y - min_y - 2 * padding
             
             scaled_path_points = []
-            for point in path_points:
-                lat, lon, _ = point
-                
-                # Safe coordinate normalization
-                lon_range = path_tracker.max_lon - path_tracker.min_lon
-                lat_range = path_tracker.max_lat - path_tracker.min_lat
-                
-                x_norm = 0.5 if lon_range == 0 else (lon - path_tracker.min_lon) / lon_range
-                y_norm = 0.5 if lat_range == 0 else (lat - path_tracker.min_lat) / lat_range
-                
-                x = min_x + padding + (x_norm * box_width)
-                y = min_y + padding + ((1 - y_norm) * box_height)
-                scaled_path_points.append((x, y))
             
-            # Draw path only if we have valid points
+            # Handle cases where min and max are equal (no movement)
+            lon_range = path_tracker.max_lon - path_tracker.min_lon
+            lat_range = path_tracker.max_lat - path_tracker.min_lat
+            
+            # If no movement, center the point
+            if lon_range == 0 or lat_range == 0:
+                x = min_x + padding + (box_width / 2)
+                y = min_y + padding + (box_height / 2)
+                scaled_path_points.append((x, y))
+            else:
+                for point in path_points:
+                    lat, lon, _ = point
+                    x_norm = (lon - path_tracker.min_lon) / lon_range
+                    y_norm = (lat - path_tracker.min_lat) / lat_range
+                    
+                    x = min_x + padding + (x_norm * box_width)
+                    y = min_y + padding + ((1 - y_norm) * box_height)  # Invert Y
+                    scaled_path_points.append((x, y))
+            
+            # Draw path
             if len(scaled_path_points) > 1:
                 draw.line(scaled_path_points,
                          fill=LayoutConfig.COLORS["WAYPOINT_LINE"],
@@ -321,15 +319,17 @@ def draw_waypoints(draw, center, scaled_points, current_index):
             # Draw current position
             if current_index < len(path_points):
                 lat, lon, alt = path_points[current_index]
-                lon_range = path_tracker.max_lon - path_tracker.min_lon
-                lat_range = path_tracker.max_lat - path_tracker.min_lat
                 
-                # Center the point if range is 0 (hovering)
-                x_norm = 0.5 if lon_range == 0 else (lon - path_tracker.min_lon) / lon_range
-                y_norm = 0.5 if lat_range == 0 else (lat - path_tracker.min_lat) / lat_range
+                # Use the same logic as above for consistency
+                if lon_range == 0 or lat_range == 0:
+                    x = min_x + padding + (box_width / 2)
+                    y = min_y + padding + (box_height / 2)
+                else:
+                    x_norm = (lon - path_tracker.min_lon) / lon_range
+                    y_norm = (lat - path_tracker.min_lat) / lat_range
+                    x = min_x + padding + (x_norm * box_width)
+                    y = min_y + padding + ((1 - y_norm) * box_height)
                 
-                x = min_x + padding + (x_norm * box_width)
-                y = min_y + padding + ((1 - y_norm) * box_height)
                 draw_current_position(draw, x, y, alt)
 
     # Draw border
@@ -349,14 +349,16 @@ class PathTracker:
         self.max_alt = float('-inf')
         self.threshold = simplification_threshold
         self.earth_radius = 6371000  # Earth's radius in meters
-        self.total_distance = 0.0
-        self.current_width = 0.0
+        self.total_distance = 0.0    # Track total flight distance
+        self.current_width = 0.0    # Add these new variables
         self.current_height = 0.0
         self.current_distance = 0.0
 
     def add_point(self, lat, lon, alt):
+        """Add a new waypoint and update bounds"""
         self.points.append((lat, lon, alt))
         
+        # Update bounds
         self.min_lat = min(self.min_lat, lat)
         self.max_lat = max(self.max_lat, lat)
         self.min_lon = min(self.min_lon, lon)
@@ -364,6 +366,7 @@ class PathTracker:
         self.min_alt = min(self.min_alt, alt)
         self.max_alt = max(self.max_alt, alt)
         
+        # Update total distance
         if len(self.points) >= 2:
             self.total_distance += self.distance_between_points(
                 self.points[-2], self.points[-1])
@@ -371,6 +374,7 @@ class PathTracker:
         self.simplify_path()
 
     def simplify_path(self):
+        """Simplify path using Douglas-Peucker algorithm"""
         if len(self.points) < 3:
             self.simplified_points = self.points[:]
             return
@@ -411,6 +415,7 @@ class PathTracker:
         self.simplified_points = douglas_peucker(self.points, self.threshold)
 
     def get_flight_dimensions(self):
+        """Calculate flight dimensions in meters"""
         center_lat = (self.min_lat + self.max_lat) / 2
         width = self.distance_between_points(
             (center_lat, self.min_lon, 0),
@@ -421,80 +426,100 @@ class PathTracker:
         return width, height
 
     def get_screen_position(self, lat, lon, screen_width, screen_height, padding=50):
+        """Convert GPS coordinates to screen position"""
         usable_width = screen_width - 2 * padding
         usable_height = screen_height - 2 * padding
-        # Handle hovering
-        lon_range = self.max_lon - self.min_lon
-        lat_range = self.max_lat - self.min_lat
         
-        # If hovering, center the point
-        if lon_range == 0:
-            x_norm = 0.5
-        else:
-            x_norm = (lon - self.min_lon) / lon_range
-            
-        if lat_range == 0:
-            y_norm = 0.5
-        else:
-            y_norm = (lat - self.min_lat) / lat_range
+        # Calculate normalized position (0-1)
+        x_norm = (lon - self.min_lon) / (self.max_lon - self.min_lon) if self.max_lon != self.min_lon else 0.5
+        y_norm = (lat - self.min_lat) / (self.max_lat - self.min_lat) if self.max_lat != self.min_lat else 0.5
         
+        # Convert to screen coordinates
         x = padding + (x_norm * usable_width)
-        y = padding + ((1 - y_norm) * usable_height)
+        y = padding + ((1 - y_norm) * usable_height)  # Invert Y since screen coords go down
         
         return int(x), int(y)
+
+    def distance_between_points(self, point1, point2):
+        lat1, lon1, _ = point1
+        lat2, lon2, _ = point2
+        
+        dlat = math.radians(lat2 - lat1)
+        dlon = math.radians(lon2 - lon1)
+        
+        a = (math.sin(dlat/2) * math.sin(dlat/2) +
+             math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+             math.sin(dlon/2) * math.sin(dlon/2))
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+        
+        return self.earth_radius * c
+
+    def calculate_grid_scale(self):
+        width, height = self.get_flight_dimensions()
+        max_dim = max(width, height)
+        
+        # Scale steps (meters)
+        scales = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
+        
+        # Find  scale
+        for scale in scales:
+            if max_dim / 8 < scale:
+                return scale
+        
+        return scales[-1]
 
     def get_scaled_points(self, box_rect):
         min_x, min_y, max_x, max_y = box_rect
         padding = 25
+        
         usable_width = max_x - min_x - 2 * padding
         usable_height = max_y - min_y - 2 * padding
+        
         scaled_points = []
         
-        # Handle hovering
-        lon_range = self.max_lon - self.min_lon
-        lat_range = self.max_lat - self.min_lat
-        
-        for lat, lon, alt in self.points:
-            if lon_range == 0:
-                x_norm = 0.5
-            else:
-                x_norm = (lon - self.min_lon) / lon_range
-                
-            if lat_range == 0:
-                y_norm = 0.5
-            else:
-                y_norm = (lat - self.min_lat) / lat_range
+        # Handle single point or no movement case
+        if len(self.points) == 1 or (self.max_lon == self.min_lon and self.max_lat == self.min_lat):
+            x = min_x + padding + (usable_width / 2)  # Center point horizontally
+            y = min_y + padding + (usable_height / 2)  # Center point vertically
+            return [(x, y, self.points[0][2])] if self.points else []
             
+        for lat, lon, alt in self.points:
+            # Normalize coordinates (0-1) with safety checks
+            x_norm = 0.5 if self.max_lon == self.min_lon else (lon - self.min_lon) / (self.max_lon - self.min_lon)
+            y_norm = 0.5 if self.max_lat == self.min_lat else (lat - self.min_lat) / (self.max_lat - self.min_lat)
+            
+            # Transform to box coordinates
             x = min_x + padding + (x_norm * usable_width)
-            y = min_y + padding + ((1 - y_norm) * usable_height)
+            y = min_y + padding + ((1 - y_norm) * usable_height)  # Invert Y
             
             scaled_points.append((x, y, alt))
         
         return scaled_points
-    
+
     def get_current_dimensions(self, current_index):
         if current_index < 0 or not self.points:
-            return 0.0, 0.0
+            return 1.0, 1.0  # Return minimal dimensions instead of zero
             
         current_points = self.points[:current_index + 1]
         if not current_points:
-            return 0.0, 0.0
+            return 1.0, 1.0
             
         min_lat = min(p[0] for p in current_points)
         max_lat = max(p[0] for p in current_points)
         min_lon = min(p[1] for p in current_points)
         max_lon = max(p[1] for p in current_points)
         
-        if min_lat == max_lat and min_lon == max_lon:
+        # If no movement (hovering), return minimal dimensions
+        if min_lat == max_lat or min_lon == max_lon:
             return 1.0, 1.0
         
         center_lat = (min_lat + max_lat) / 2
         width = self.distance_between_points(
             (center_lat, min_lon, 0),
-            (center_lat, max_lon, 0)) or 1.0
+            (center_lat, max_lon, 0))
         height = self.distance_between_points(
             (min_lat, min_lon, 0),
-            (max_lat, min_lon, 0)) or 1.0
+            (max_lat, min_lon, 0))
             
         return width, height
 
@@ -507,33 +532,6 @@ class PathTracker:
             distance += self.distance_between_points(
                 self.points[i], self.points[i + 1])
         return distance
-
-    def distance_between_points(self, point1, point2):
-        lat1, lon1, _ = point1
-        lat2, lon2, _ = point2
-        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
-        dlat = lat2 - lat1
-        dlon = lon2 - lon1
-        
-        a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
-        c = 2 * math.asin(math.sqrt(a))
-        
-        return self.earth_radius * c
-
-    def calculate_grid_scale(self):
-        if not self.points:
-            return 10 
-            
-        width, height = self.get_flight_dimensions()
-        max_dim = max(width, height, 1.0)
-        scales = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]
-        target = max_dim / 8
-        
-        for scale in scales:
-            if scale >= target:
-                return scale
-                
-        return scales[-1]
 
 path_tracker = PathTracker(simplification_threshold=5.0)
 
@@ -673,7 +671,7 @@ def create_frames_from_srt(input_srt):
     os.makedirs(output_dir, exist_ok=True)
     failed_blocks = []
     frames_processed = 0
-    bounds = None
+    bounds = None  # Store bounds globally
     
     try:
         with open(input_srt, "r", encoding="utf-8") as file:
