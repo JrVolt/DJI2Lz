@@ -9,10 +9,22 @@ ENABLE_SATELLITE = True
 ENABLE_RCDIST = True
 ENABLE_PHOTO = True
 ENABLE_WAYPOINT = True
-ENABLE_STATS_DISTANCE = True 
-ENABLE_STATS_AREA = False 
-ENABLE_STATS_UNIT = False 
+ENABLE_STATS_DISTANCE = True
+ENABLE_STATS_AREA = False
+ENABLE_STATS_UNIT = False
 
+# Turn off all unsupported instruments 
+# 
+# Set to TRUE to hide unsupported values
+# Set to FALSE to show spoofed values
+
+UNSUPPORTED = False 
+
+if UNSUPPORTED == True:
+    ENABLE_H_SPEEDOMETER = False
+    ENABLE_V_SPEEDOMETER = False
+    ENABLE_SATELLITE = False
+    ENABLE_RCDIST = False
 
 #[Global]
 RESOLUTION = (3840, 2160)
