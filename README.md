@@ -69,7 +69,7 @@ API Setup:
 
 ### Drone Compatibility
 
-It suppsed to be compatible to every DJI drone that support the telemetry in subtile track with correct telemtry syntax.
+It suppsed to be compatible to every DJI drone that support the telemetry in subtile track with correct telemtry syntax*.
 
 **Supported**
 `F, SS, ISO, EV, DZOOM, GPS (N, E, H), D m, H m, H.S m/s, V.S m/s `
@@ -77,7 +77,7 @@ It suppsed to be compatible to every DJI drone that support the telemetry in sub
 **Unsupported**
 `[iso : ] [shutter : ] [fnum : ] [ev : ] [ct : ] [color_md : d] [focal_len : ] [latitude: ] [longitude: ] [rel_alt:  abs_alt: ]`
 
-(Mainly for the lack of speed data)
+(Mainly for the lack of speed data*)
 
 
 I can confirm that :
@@ -86,17 +86,18 @@ I can confirm that :
 
 For complete support table refer to DroneSupport.md
 
-Telemetry data heavily different, barely usable to generate graphics.
+~~Telemetry data heavily different, barely usable to generate graphics.~~
 Some ~~older~~ drone or firmware (maybe both) have a separate .srt along the .mp4 file.
+
 
 **Force unsupported**
 
-Ok, First of all the overall compatibility won't change
-
+Overall compatibility won't change
 HOWEVER
 
-It's now availlable a conversion tool that (force) convert the unsupported telemetry spoofing the missing value. 
-Spoofed value are set to 0, edit the module if you want. 
+It's now availlable a conversion tool that convert the unsupported telemetry.
+`Launcher option 8`
+Spoofed value are added and set to 0 if missing, edit the module if you want. 
 
 NOTE : In this case you will find A LOTS MORE .png, this time ONE.png=1ftg
 No need to strech each png to 1 sec. 
@@ -139,7 +140,7 @@ Each modules can be executed standalone, execpt for the flightrecord decode that
 All the goal of the project has already been achieved, it can be considered complete.
 
 Eventually all minor update.
-    (I Lied... 05/25)
+(I Lied... 05/25)
 
 ### Contributing
 
