@@ -40,7 +40,7 @@ For long shoot/flight, divided in `multiple DJI.mp4` please follow this process,
 
 1. Extract all the .srt from the videos `DJI_0001.mp4 DJI_0002.mp4 DJI_0003.mp4`
 2. Merge the extracted file, `Launcher option 5`
-3. Generate the HUD forom `DJI_MERGED_0001-0002-0003.srt` 
+3. Generate the HUD from `DJI_MERGED_0001-0002-0003.srt` 
 
 ## Editing 
 
@@ -69,7 +69,7 @@ API Setup:
 
 ### Drone Compatibility
 
-It suppsed to be compatible to every DJI drone that support the telemetry in subtile track with correct telemtry syntax*.
+It suppsed to be compatible to every DJI drone that support the telemetry in subtile track with correct telemtry syntax.
 
 **Supported**
 `F, SS, ISO, EV, DZOOM, GPS (N, E, H), D m, H m, H.S m/s, V.S m/s `
@@ -77,8 +77,7 @@ It suppsed to be compatible to every DJI drone that support the telemetry in sub
 **Unsupported**
 `[iso : ] [shutter : ] [fnum : ] [ev : ] [ct : ] [color_md : d] [focal_len : ] [latitude: ] [longitude: ] [rel_alt:  abs_alt: ]`
 
-(Mainly for the lack of speed data*)
-
+~~Mainly for the lack of speed data)~~
 
 I can confirm that :
 - WORKING with latest firmware of `DJI Mini, DJI Mini 2` (up tp 04/25)
@@ -95,17 +94,19 @@ Some ~~older~~ drone or firmware (maybe both) have a separate .srt along the .mp
 Overall compatibility won't change
 HOWEVER
 
-It's now availlable a conversion tool that convert the unsupported telemetry.
+It's availlable module to convert the unsupported telemetry for HUD generation.
 `Launcher option 8`
 Spoofed value are added and set to 0 if missing, edit the module if you want. 
 
-NOTE : In this case you will find A LOTS MORE .png, this time ONE.png=1ftg
+NOTE : In this case you will find A LOT MORE .png, this time ONE.png=1ftg
 No need to strech each png to 1 sec. 
 
 It's suggested to turn off : 
 - Speedometer
 - GPS Count 
 - RC Distance
+
+Change `UNSUPPORTED = True/False` or do it manually
 
 
 ## Configuration
