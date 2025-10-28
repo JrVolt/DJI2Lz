@@ -30,7 +30,7 @@
 | Mini 3 Pro             | 2022 |     |     |  x |         |          |
 | Mini 4 Pro             | 2023 |     |     |    |    x    |          |
 |                        |      |     |     |    |         |          |
-| Mavic Air              | 2018 |     |     |    |    x    |          |
+| Mavic Air              | 2018 |     |     |  x |         |          |
 | Mavic Air 2            | 2020 |     |     |    |         |     X    |
 | Air 2S                 | 2021 |     |     |    |    x    |          |
 | Air 3                  | 2023 |     |     |    |    x    |          |
