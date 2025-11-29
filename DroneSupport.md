@@ -21,6 +21,7 @@
 | Mavic 3 Classic        | 2022 |     |     |    |    x    |          |
 | Mavic 3 Pro            | 2023 |     |     |    |    x    |          |
 | Mavic 3 Pro Cine       | 2023 |     |     |    |    x    |          |
+| Mavic 4 Pro            | 2025 |     |     |    |    x    |          |
 |                        |      |     |     |    |         |          |
 | Mavic Mini             | 2019 |  x  |     |    |         |          |
 | Mini SE                | 2021 |     |     |    |    x    |          |
@@ -29,11 +30,13 @@
 | Mini 3                 | 2022 |     |     |    |    x    |          |
 | Mini 3 Pro             | 2022 |     |     |  x |         |          |
 | Mini 4 Pro             | 2023 |     |     |    |    x    |          |
+| Mini 5 Pro             | 2025 |     |     |    |    x    |          |
 |                        |      |     |     |    |         |          |
 | Mavic Air              | 2018 |     |     |  x |         |          |
 | Mavic Air 2            | 2020 |     |     |    |         |     X    |
 | Air 2S                 | 2021 |     |     |    |    x    |          |
 | Air 3                  | 2023 |     |     |    |    x    |          |
+| Air 3S                 | 2023 |     |     |    |    x    |          |
 |                        |      |     |     |    |         |          |
 | DJI FPV                | 2021 |     |     |    |    x    |          |
 | Avata                  | 2022 |     |     |    |    x    |          |
