@@ -10,7 +10,7 @@
 | Phantom 4              | 2016 |     |     |    |    x    |          |
 | Phantom 4 Pro          | 2016 |     |     |    |    x    |          |
 | Phantom 4 Advanced     | 2017 |     |     |    |    x    |          |
-| Phantom 4 Pro V2.0     | 2018 |     |  x  |    |         |          |
+| Phantom 4 Pro V2.0     | 2018 |     |  x  |    |    -    |          |
 |                        |      |     |     |    |         |          |
 | Mavic Pro              | 2016 |     |     |    |    x    |          |
 | Mavic Pro Platinum     | 2017 |     |     |    |    x    |          |
@@ -33,9 +33,9 @@
 | Mini 5 Pro             | 2025 |     |     |    |    x    |          |
 |                        |      |     |     |    |         |          |
 | Mavic Air              | 2018 |     |     |  x |         |          |
-| Mavic Air 2            | 2020 |     |     |    |         |     X    |
+| Mavic Air 2            | 2020 |     |     |    |         |     x    |
 | Air 2S                 | 2021 |     |     |    |    x    |          |
-| Air 3                  | 2023 |     |     |    |    x    |          |
+| Air 3                  | 2023 |     |     |    |         |     x    |
 | Air 3S                 | 2023 |     |     |    |    x    |          |
 |                        |      |     |     |    |         |          |
 | DJI FPV                | 2021 |     |     |    |    x    |          |
