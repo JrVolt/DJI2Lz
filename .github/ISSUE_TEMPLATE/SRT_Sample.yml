@@ -11,14 +11,13 @@ body:
       value: |
         Thank you for helping improve SRT compatibility!
 
-        You can contribute in **either way** (or both):
+        Please provide a **small SRT excerpt 5 subtitle entries)**.
 
-        - Upload a `.srt` file or a `.mp4` containing embedded subtitles  
-        - Paste a sample of **5 subtitle entries**
+        You can paste:
+        - consecutive entries (recommended)
+        - or any small representative sample
 
-        This helps us support more drone and camera formats, including non-DJI devices.
-
-        If your SRT contains GPS coordinates or telemetry, you may redact them, as long as the SRT format stays valid.
+        If your SRT contains GPS coordinates or telemetry, you may redact them as long as the SRT structure remains valid.
 
   - type: input
     id: manufacturer
@@ -45,13 +44,12 @@ body:
   - type: dropdown
     id: source
     attributes:
-      label: Where does the SRT come from?
+      label: Where does the SRT come from? (optional)
       options:
         - Standalone .srt file
         - Embedded subtitle track in MP4
         - Other (Please specify in the notes)
-    validations:
-      required: true
+      placeholder: Embedded subtitle track in MP4
 
   - type: textarea
     id: sample
@@ -66,7 +64,8 @@ body:
     id: privacy_ack
     attributes:
       label: Privacy acknowledgment
+      description: Please confirm before submitting.
       options:
-        - label: I understand that SRT files may contain GPS coordinates and other telemetry. If I choose not to redact them, I understand that I am publicly sharing this information.
+        - label: I understand that SRT files may contain GPS coordinates and telemetry. I am aware that anything not redacted will be publicly visible in this GitHub issue.
     validations:
       required: true
