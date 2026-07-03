@@ -60,5 +60,5 @@ body:
       label: Privacy Acknowledgment
       description: Please confirm before submitting
       options:
-        - label: I understand this will be publicly visible on GitHub
+        - label: I understand that SRT files may contain GPS coordinates and telemetry. I am aware that anything not redacted will be publicly visible in this GitHub issue.
           required: true
