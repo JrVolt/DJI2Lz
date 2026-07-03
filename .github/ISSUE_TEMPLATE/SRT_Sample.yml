@@ -11,7 +11,7 @@ body:
       value: |
         Thank you for helping improve SRT compatibility!
 
-        Please provide a **small SRT excerpt 5 subtitle entries)**.
+        Please provide a **small SRT excerpt 5 subtitle entries**.
 
         You can paste:
         - consecutive entries (recommended)
@@ -49,14 +49,13 @@ body:
         - Standalone .srt file
         - Embedded subtitle track in MP4
         - Other (Please specify in the notes)
-      placeholder: Embedded subtitle track in MP4
 
   - type: textarea
     id: sample
     attributes:
       label: Paste SRT sample (optional)
       description: |
-        Paste somthing like 5 consecutive or random subtitle entries here.
+        Paste something like 5 consecutive or random subtitle entries here.
         You can also leave this empty if you upload a file.
       render: text
 
