@@ -56,7 +56,6 @@ body:
       label: Paste SRT sample (optional)
       description: |
         Paste something like 5 consecutive or random subtitle entries here.
-      render: text
       required: false
 
   - type: checkboxes
@@ -64,6 +63,6 @@ body:
     attributes:
       label: Privacy acknowledgment
       description: Please confirm before submitting.
-      required: true
       options:
         - label: I understand that SRT files may contain GPS coordinates and telemetry. I am aware that anything not redacted will be publicly visible in this GitHub issue.
+          required: true
