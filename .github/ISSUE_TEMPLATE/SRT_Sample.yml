@@ -1,7 +1,6 @@
 name: Submit an SRT Sample
-description: Help improve compatibility by sharing a sample SRT file.
-title: "[SRT Sample] <Device Model>"
-
+description: Help improve compatibility by sharing a sample SRT file
+title: "[SRT Sample] "
 labels:
   - srt-sample
 
@@ -9,60 +8,57 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for helping improve SRT compatibility!
-
-        Please provide a **small SRT excerpt of 5 subtitle entries**.
-
-        You can paste:
-        - consecutive entries (recommended)
-        - or any small representative sample
-
-        If your SRT contains GPS coordinates or telemetry, you may redact them as long as the SRT structure remains valid.
+        Thanks for sharing an SRT sample!
+        Please provide a small excerpt of 5 subtitle entries.
 
   - type: input
     id: manufacturer
     attributes:
       label: Manufacturer
-      placeholder: DJI, Autel, Potensic, FIMI, Holy Stone, etc.
+      placeholder: DJI, Autel, Potensic, FIMI, etc.
+    validations:
       required: true
 
   - type: input
     id: model
     attributes:
-      label: Device model
+      label: Device Model
       placeholder: Mini 4 Pro
+    validations:
       required: true
 
   - type: input
     id: firmware
     attributes:
-      label: Firmware version (optional)
+      label: Firmware Version (optional)
       placeholder: v01.00.0500
+    validations:
       required: false
 
   - type: dropdown
     id: source
     attributes:
-      label: Where does the SRT come from? (optional)
+      label: SRT Source (optional)
       options:
         - Standalone .srt file
         - Embedded subtitle track in MP4
-        - Other (Please specify in the notes)
+        - Other
+    validations:
       required: false
 
   - type: textarea
     id: sample
     attributes:
-      label: Paste SRT sample (optional)
-      description: |
-        Paste something like 5 consecutive or random subtitle entries here.
+      label: SRT Sample (optional)
+      placeholder: Paste 5 consecutive or representative entries here
+    validations:
       required: false
 
   - type: checkboxes
-    id: privacy_ack
+    id: privacy
     attributes:
-      label: Privacy acknowledgment
-      description: Please confirm before submitting.
+      label: Privacy Acknowledgment
+      description: Please confirm before submitting
       options:
-        - label: I understand that SRT files may contain GPS coordinates and telemetry. I am aware that anything not redacted will be publicly visible in this GitHub issue.
+        - label: I understand this will be publicly visible on GitHub
           required: true
