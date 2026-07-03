@@ -49,10 +49,10 @@ body:
   - type: textarea
     id: sample
     attributes:
-      label: SRT Sample (optional)
+      label: SRT Sample
       placeholder: Paste 5 consecutive or representative entries here
     validations:
-      required: false
+      required: true
 
   - type: checkboxes
     id: privacy
