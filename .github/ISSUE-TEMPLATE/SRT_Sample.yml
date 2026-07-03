@@ -1,0 +1,72 @@
+name: Submit an SRT Sample
+description: Help improve compatibility by sharing a sample SRT file.
+title: "[SRT Sample] <Device Model>"
+
+labels:
+  - srt-sample
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve SRT compatibility!
+
+        You can contribute in **either way** (or both):
+
+        - Upload a `.srt` file or a `.mp4` containing embedded subtitles  
+        - Paste a sample of **5 subtitle entries**
+
+        This helps us support more drone and camera formats, including non-DJI devices.
+
+        If your SRT contains GPS coordinates or telemetry, you may redact them, as long as the SRT format stays valid.
+
+  - type: input
+    id: manufacturer
+    attributes:
+      label: Manufacturer
+      placeholder: DJI, Autel, Potensic, FIMI, Holy Stone, etc.
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Device model
+      placeholder: Mini 4 Pro
+    validations:
+      required: true
+
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware version (optional)
+      placeholder: v01.00.0500
+
+  - type: dropdown
+    id: source
+    attributes:
+      label: Where does the SRT come from?
+      options:
+        - Standalone .srt file
+        - Embedded subtitle track in MP4
+        - Other (Please specify in the notes)
+    validations:
+      required: true
+
+  - type: textarea
+    id: sample
+    attributes:
+      label: Paste SRT sample (optional)
+      description: |
+        Paste somthing like 5 consecutive or random subtitle entries here.
+        You can also leave this empty if you upload a file.
+      render: text
+
+  - type: checkboxes
+    id: privacy_ack
+    attributes:
+      label: Privacy acknowledgment
+      options:
+        - label: I understand that SRT files may contain GPS coordinates and other telemetry. If I choose not to redact them, I understand that I am publicly sharing this information.
+    validations:
+      required: true

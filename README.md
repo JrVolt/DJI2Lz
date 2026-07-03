@@ -130,6 +130,15 @@ All text positioning is configured in the `DJI2Lz-HUD_Generator.py` module. Pay 
 (Is way easier do it in your preferred video editor software)
 
 
+## Contributing SRT Samples
+
+Help improve compatibility by sharing a small sample 5 entries of your drone's SRT subtitles.
+Samples may come from either a standalone `.srt` file or an SRT track embedded in an `.mp4` file (the application can extract it automatically).
+If needed, you may redact GPS coordinates or other sensitive information, **provided the SRT syntax remains unchanged**.
+
+See [CONTRIBUTE.md](CONTRIBUTE.md) for details.
+
+
 ### Dependencies
 
 - **Pillow (PIL)**
