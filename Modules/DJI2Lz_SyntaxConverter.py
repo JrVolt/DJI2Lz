@@ -4,48 +4,120 @@ import argparse
 from pathlib import Path
 
 def extract_bracket_data(text):
-    patterns = {
-        'iso': r'\[iso\s*:\s*(\d+)\]',
-        'shutter': r'\[shutter\s*:\s*([^\]]+)\]',
-        'fnum': r'\[fnum\s*:\s*(\d+)\]',
-        'ev': r'\[ev\s*:\s*([+-]?\d+(?:\.\d+)?)\]',
-        'latitude': r'\[latitude:\s*([^\]]+)\]',
-        'longitude': r'\[longitude:\s*([^\]]+)\]',
-        'altitude': r'\[altitude:\s*([^\]]+)\]',
-        'ct': r'\[ct\s*:\s*(\d+)\]',
-        'focal_len': r'\[focal_len\s*:\s*(\d+)\]'
-    }
-    
+    # Generic bracket parser: extracts key:value pairs from all [...] blocks.
+    # Handles multiple key:val entries inside a single bracket (e.g. "rel_alt: 0.000 abs_alt: 58.644").
+    bracket_contents = re.findall(r'\[([^\]]+)\]', text)
     data = {}
-    for key, pattern in patterns.items():
-        match = re.search(pattern, text)
-        if match:
-            data[key] = match.group(1).strip()
-    
+    # keys to ignore (we'll drop these or keep minimal mapping)
+    ignore_keys = set(['pp_vsync', 'pp_timestamp', 'pp_target', 'pp_current', 'pp_limit_ratio',
+                       'pp_over_image_border', 'pp_warp_status', 'pp_imu_td', 'vsync', 'eis', 'shift_x', 'shift_y'])
+
+    for content in bracket_contents:
+        # find all key: value pairs within the bracket content
+        pairs = re.findall(r'([A-Za-z0-9 _]+)\s*:\s*([^:\]]+?)(?=(?:[A-Za-z0-9 _]+\s*:)|$)', content)
+        if pairs:
+            for k, v in pairs:
+                key = k.strip().lower().replace(' ', '_')
+                val = v.strip().strip(',')
+                if key in ignore_keys or key.startswith('pp_'):
+                    # still capture absolute alt specially if it appears in ignored block
+                    if key == 'abs_alt':
+                        data['absolute_alt'] = re.search(r'([+-]?\d+(?:\.\d+)?)', val).group(1) if re.search(r'([+-]?\d+(?:\.\d+)?)', val) else val
+                    continue
+
+                # numeric extraction where appropriate
+                if key in ('rel_alt', 'abs_alt', 'altitude'):
+                    m = re.search(r'([+-]?\d+(?:\.\d+)?)', val)
+                    if m:
+                        data[key if key != 'abs_alt' else 'abs_alt'] = m.group(1)
+                        if key == 'abs_alt':
+                            data['absolute_alt'] = m.group(1)
+                        continue
+
+                data[key] = val
+        else:
+            # fallback: tokens separated by spaces, handle simple key:val tokens
+            tokens = re.split(r'\s+', content)
+            for tok in tokens:
+                if ':' in tok:
+                    k, v = tok.split(':', 1)
+                    key = k.strip().lower().replace(' ', '_')
+                    val = v.strip().strip(',')
+                    if key in ignore_keys or key.startswith('pp_'):
+                        if key == 'abs_alt':
+                            data['absolute_alt'] = re.search(r'([+-]?\d+(?:\.\d+)?)', val).group(1) if re.search(r'([+-]?\d+(?:\.\d+)?)', val) else val
+                        continue
+                    if key in ('rel_alt', 'abs_alt', 'altitude'):
+                        m = re.search(r'([+-]?\d+(?:\.\d+)?)', val)
+                        if m:
+                            data[key if key != 'abs_alt' else 'abs_alt'] = m.group(1)
+                            if key == 'abs_alt':
+                                data['absolute_alt'] = m.group(1)
+                            continue
+                    data[key] = val
+
     return data
 
 def convert_to_standard_format(data):
-    aperture = float(data.get('fnum', '280')) / 100.0
+    # Normalize fnum: accept floats (2.2) or encoded ints (280 -> 2.8)
+    def normalize_fnum(val):
+        if val is None:
+            return 2.8
+        try:
+            f = float(str(val))
+            if f >= 100:
+                return f / 100.0
+            return f
+        except Exception:
+            # try to extract number
+            m = re.search(r'([0-9]+(?:\.[0-9]+)?)', str(val))
+            if m:
+                f = float(m.group(1))
+                if f >= 100:
+                    return f / 100.0
+                return f
+        return 2.8
+
+    aperture = normalize_fnum(data.get('fnum'))
+
     shutter_speed = data.get('shutter', '1/100')
     if '/' in shutter_speed:
         parts = shutter_speed.split('/')
         if len(parts) == 2 and parts[0] == '1':
-            shutter_speed = parts[1]
-    
+            try:
+                shutter_value = float(parts[1])
+                shutter_speed = f"{shutter_value:.1f}"
+            except ValueError:
+                shutter_speed = parts[1]
+
     iso = data.get('iso', '100')
     ev = data.get('ev', '0')
     longitude = data.get('longitude', '0')
     latitude = data.get('latitude', '0')
-    altitude = data.get('altitude', '0')
-    
-    # Below some spoofed value from the bracketed telemtry file.
-    # Edit your preferred one [D, H.S, V.S also third value of GPS section that is for satellite count]
+    # prefer relative altitude if available
+    altitude = data.get('rel_alt') or data.get('altitude') or data.get('abs_alt') or '0'
+
+    # map abs_alt to absolute_alt in returned data if present
+    absolute_alt = data.get('abs_alt') or data.get('absolute_alt')
+
+    try:
+        altitude_value = float(altitude)
+    except ValueError:
+        altitude_value = 0.0
+
+    gps_alt_value = altitude_value
+    if absolute_alt is not None:
+        try:
+            gps_alt_value = float(absolute_alt)
+        except ValueError:
+            gps_alt_value = altitude_value
+
     standard_line = (
         f"F/{aperture:.1f}, SS {shutter_speed}, ISO {iso}, EV {ev}, "
-        f"GPS ({longitude}, {latitude}, 0), " 
-        f"D 0.00m, H {altitude}m, H.S 0.00m/s, V.S 0.00m/s" 
+        f"GPS ({longitude}, {latitude}, {gps_alt_value:.1f}), "
+        f"D 0.00m, H {altitude_value:.1f}m, H.S 0.00m/s, V.S 0.00m/s"
     )
-    
+
     return standard_line
 
 def convert_bracket_srt_to_standard(input_file, output_file):
@@ -66,13 +138,15 @@ def convert_bracket_srt_to_standard(input_file, output_file):
         
         subtitle_number = lines[0].strip()
         timestamp = lines[1].strip()
+        # join remaining lines and strip HTML tags
+        joined = ' '.join(lines[2:])
+        clean_line = re.sub(r'<[^>]+>', '', joined)
         telemetry_line = None
-        
-        for line in lines[2:]:
-            clean_line = re.sub(r'<[^>]+>', '', line)
-            if '[iso :' in clean_line and '[longitude:' in clean_line:
-                telemetry_line = clean_line
-                break
+
+        # detect if there are bracketed key:value pairs and an ISO (robust to spaces around ':')
+        bracket_contents = re.findall(r'\[([^\]]+)\]', clean_line)
+        if bracket_contents and any(re.search(r'\biso\b', bc, re.I) for bc in bracket_contents):
+            telemetry_line = clean_line
         
         if telemetry_line:
             bracket_data = extract_bracket_data(telemetry_line)
@@ -86,10 +160,21 @@ def convert_bracket_srt_to_standard(input_file, output_file):
         else:
             converted_blocks.append(block)
     
-    with open(output_file, 'w', encoding='utf-8') as f:
-        f.write('\n\n'.join(converted_blocks))
-        if converted_blocks:
-            f.write('\n\n')
+    try:
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write('\n\n'.join(converted_blocks))
+            if converted_blocks:
+                f.write('\n\n')
+    except PermissionError:
+        # fallback: write to a known directory when the input folder is not writable
+        fallback_dir = Path.home() / 'Desktop' / 'DJI2Lz_Converted'
+        fallback_dir.mkdir(parents=True, exist_ok=True)
+        fallback = fallback_dir / f"{Path(output_file).stem}{Path(output_file).suffix}"
+        with open(fallback, 'w', encoding='utf-8') as f:
+            f.write('\n\n'.join(converted_blocks))
+            if converted_blocks:
+                f.write('\n\n')
+        print(f"Permission denied writing to {output_file}; wrote to fallback: {fallback}")
 
 def process_path(input_path):
     if isinstance(input_path, str):
